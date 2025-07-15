@@ -2,6 +2,15 @@ const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
 
+// CSP header ekle
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src *; img-src * data:; script-src * 'unsafe-inline'; style-src * 'unsafe-inline';"
+  );
+  next();
+});
+
 app.get('/api/derpet-trades', async (req, res) => {
   const apiUrl = 'https://api.fatfinger.fun/tokens/updates/trades/0x0c0A418ce732B801Dcd98107D07e26983cC2AC78';
   try {
@@ -14,4 +23,5 @@ app.get('/api/derpet-trades', async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log('Proxy running on http://localhost:3000')); 
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log('Proxy running on port ' + port)); 
